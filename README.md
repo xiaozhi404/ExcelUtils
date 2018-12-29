@@ -1,8 +1,7 @@
 # ExcelUtils
 注解式的通用Excel导入工具类
 
-使用例子：
-需求:将如下excel转成list<model>
+For example：将如下excel转成model list
   
 ![image](https://github.com/xiaozhi404/readme_pic/raw/master/1.png)
 

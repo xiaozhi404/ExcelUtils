@@ -5,7 +5,7 @@ For example：将如下excel转成model list
   
 ![image](https://github.com/xiaozhi404/readme_pic/raw/master/1.png)
 
-一.写绑定模型
+一.绑定Excel模型
 ```java  
   /**
  * 描述：证书名单实体类
@@ -59,7 +59,7 @@ public class MyApp {
     }
 }
 ```
-三.会进行通用的异常校验，抛出对应的异常.
+三.会进行如下通用的异常校验，抛出对应的异常.
 ```java
 NotExcelException
 NullFileException

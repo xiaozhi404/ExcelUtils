@@ -50,7 +50,7 @@ public class CertificateListExcelModel {
 ```java
 public class MyApp {
     public static void main(String[] args) throws Exception {
-        FileInputStream fileInputStream = new FileInputStream(new File("/Users/xiaozhi/Desktop/blank.xlsx"));
+        FileInputStream fileInputStream = new FileInputStream(new File("/Users/xiaozhi/Desktop/demo.xlsx"));
         List<CertificateListExcelModel> certificateListExcelModels = ExcelUtils.covertExcel2Model(fileInputStream, CertificateListExcelModel.class);
         for (CertificateListExcelModel a : certificateListExcelModels) {
             System.out.println(a);

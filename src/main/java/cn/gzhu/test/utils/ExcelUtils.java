@@ -38,7 +38,8 @@ public class ExcelUtils {
         for (int i = 0; i < titleCellNum; ++i) {
             indexWithTitle.put(i, titleRow.getCell(i).getStringCellValue());
         }
-
+        //唯一性值，用index+字段的string值进行存储
+        List<String> onlyContainer = new ArrayList<>();
         for (Row row : sheet) {
             if (row.getRowNum() < excleSheet.startIndex() || isBlankRow(excleSheet.ignoreOnlyHaveNoRow(), row)) {
                 continue;
@@ -82,8 +83,10 @@ public class ExcelUtils {
                 }
                 //校验
                 ExcleColumnVerify excleColumnVerify = field.getAnnotation(ExcleColumnVerify.class);
+
                 if (null != excleColumnVerify) {
-                    ExcelColumnVerifyUtils.verity(MyBeanUtils.getProperty(t, field.getName()), row.getRowNum(), indexWithTitle.get(index), excleColumnVerify);
+                    Object propVal = MyBeanUtils.getProperty(t, field.getName());
+                    ExcelColumnVerifyUtils.verity(propVal, row.getRowNum()+1, indexWithTitle.get(index), excleColumnVerify, onlyContainer, index);
                 }
             }
             result.add(t);

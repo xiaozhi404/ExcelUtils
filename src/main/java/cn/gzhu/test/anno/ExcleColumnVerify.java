@@ -21,4 +21,8 @@ public @interface ExcleColumnVerify {
 
     //校验身份证号
     boolean isIDCardNo() default false;
+
+    //校验唯一性，代表该字段在excel表中是唯一的
+    boolean only() default false;
+
 }

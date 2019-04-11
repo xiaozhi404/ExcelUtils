@@ -23,7 +23,7 @@ public class ExamineeExcelModel {
     private String sex;
 
     @ExcleColumn(index = 3, javaType = ExcelColumType.STRING)
-    @ExcleColumnVerify(notNull = true, isIDCardNo = true)
+    @ExcleColumnVerify(notNull = true, isIDCardNo = true, only = true)
     private String identityNum;
 
     @ExcleColumn(index = 4, javaType = ExcelColumType.STRING)

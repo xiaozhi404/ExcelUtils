@@ -1,6 +1,7 @@
 package cn.gzhu.test.pojo;
 
 import cn.gzhu.test.anno.ExcleColumn;
+import cn.gzhu.test.anno.ExcleColumnVerify;
 import cn.gzhu.test.anno.ExcleSheet;
 import cn.gzhu.test.constant.ExcelColumType;
 import lombok.Data;
@@ -9,14 +10,15 @@ import lombok.Data;
  * 描述：证书名单实体类
  */
 @Data
-@ExcleSheet(startIndex = 5, importBlankRow = false)
+@ExcleSheet(startIndex = 1)
 public class CertificateListExcelModel {
 
     /**
      * 序号
      */
-    @ExcleColumn(index = 0, javaType = ExcelColumType.INTEGER)
-    private Integer sNum;
+    @ExcleColumn(index = 0, javaType = ExcelColumType.LONG)
+    @ExcleColumnVerify(isPhoneNum = true)
+    private Long sNum;
 
     /**
      * 获奖人名

@@ -1,7 +1,5 @@
 package cn.gzhu.test.anno;
 
-import cn.gzhu.test.constant.ExcelColumType;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -9,15 +7,18 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.FIELD;
 
 /**
- * 描述：excle字段标题
- * excle的字段从0开始
+ * 描述：校验excle字段
  */
 @Target({FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ExcleColumn {
+public @interface ExcleColumnVerify {
 
-    int index() default -1;
+    //校验非空
+    boolean notNull() default false;
 
-    ExcelColumType javaType();
+    //校验手机号
+    boolean isPhoneNum() default false;
 
+    //校验身份证号
+    boolean isIDCardNo() default false;
 }

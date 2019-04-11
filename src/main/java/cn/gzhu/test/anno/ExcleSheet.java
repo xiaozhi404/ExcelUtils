@@ -13,6 +13,9 @@ import static java.lang.annotation.ElementType.TYPE;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ExcleSheet {
 
+    //标题行的下标
+    int titleIndex() default 0;
+
     //从哪一行开始读数据
     int startIndex();
 
@@ -21,4 +24,7 @@ public @interface ExcleSheet {
 
     //是否导入空白行
     boolean importBlankRow() default true;
+
+    //忽略只有序列号的行 值为序列号的下标
+    int ignoreOnlyHaveNoRow() default -1;
 }

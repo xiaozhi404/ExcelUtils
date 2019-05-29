@@ -29,7 +29,6 @@ public class ExcelColumnVerifyUtils {
         if (excleColumnVerify.isPhoneNum() && (value.toString().length() != 11 || !matcher.matches())) {
             throw new PhoneNumException("第" + row + "行，" + titleName + "字段输入不合法");
         }
-
         if (excleColumnVerify.only() && onlyContainer.contains(index+value.toString())) {
             throw new RepetException("第" + row + "行，" + titleName + "字段重复");
         } else {

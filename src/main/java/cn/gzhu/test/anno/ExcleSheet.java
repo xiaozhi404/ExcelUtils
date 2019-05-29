@@ -27,4 +27,13 @@ public @interface ExcleSheet {
 
     //忽略只有序列号的行 值为序列号的下标
     int ignoreOnlyHaveNoRow() default -1;
+
+    //导出的模版名
+    String templateFileName() default "";
+
+    //导出的文件名
+    String exportFileName() default "";
+
+    //导出的文件扩展名
+    String exName() default ".xlsx";
 }

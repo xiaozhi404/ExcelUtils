@@ -18,6 +18,11 @@ public @interface ExcleColumn {
 
     int index() default -1;
 
+    int titleRow() default -1;
+
     ExcelColumType javaType();
+
+    String dateFormat() default "";
+
 
 }

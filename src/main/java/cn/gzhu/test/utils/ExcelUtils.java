@@ -4,21 +4,25 @@ package cn.gzhu.test.utils;
 import cn.gzhu.test.anno.ExcleColumn;
 import cn.gzhu.test.anno.ExcleColumnVerify;
 import cn.gzhu.test.anno.ExcleSheet;
+import cn.gzhu.test.constant.ExcelColumType;
 import cn.gzhu.test.exception.NotExcelException;
 import cn.gzhu.test.exception.NullFileException;
 import cn.gzhu.test.exception.RowNumBeyondException;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class ExcelUtils {
+
 
     public static <T> List<T> covertExcel2Model(FileInputStream file, Class<T> clazz) throws Exception {
 
@@ -94,6 +98,8 @@ public class ExcelUtils {
         return result;
     }
 
+
+
     public static Boolean isBlankRow(int noIndex, Row row) {
         int cellNum = row.getPhysicalNumberOfCells();
         for (int i = 0; i < cellNum; ++i) {
@@ -105,6 +111,85 @@ public class ExcelUtils {
         return true;
     }
 
+    /**
+     *导出excel
+     */
+    public static<T> void export(List<T> modelList, Object headModel) throws Exception {
+        if (null == modelList || modelList.size() < 1) {
+            return;
+        }
+        Class<T> clazz = (Class<T>) modelList.get(0).getClass();
+        //获取模版
+        ExcleSheet excleSheet = clazz.getAnnotation(ExcleSheet.class);
+        String templateFileName = excleSheet.templateFileName();
+        InputStream resourceAsStream = ExcelUtils.class.getResourceAsStream(templateFileName);
+        Workbook wb = WorkbookFactory.create(resourceAsStream);
+        Sheet sheet = wb.getSheetAt(0);
+        //获取单元格样式
+        CellStyle cellStyle = sheet.getRow(excleSheet.startIndex()).getCell(0).getCellStyle();
+        Integer counter = excleSheet.startIndex();
+        Map<Integer, DateFormat> indexWithDateFormat = new HashMap<>();
+        //id生成器
+        Double idCounter = 1d;
+
+
+
+        for (T t: modelList) {
+            //从最后一行开始写
+            Row row = sheet.createRow(counter++);
+            Field[] fields = clazz.getDeclaredFields();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                ExcleColumn excleColumn = field.getAnnotation(ExcleColumn.class);
+                if (null == excleColumn) continue;
+                int index = excleColumn.index();
+                //初始化时间字段的格式化器  index:dateFormat
+                if (!"".equals(excleColumn.dateFormat())) {
+                    indexWithDateFormat.put(index, new SimpleDateFormat("yyyy-MM-dd"));
+                }
+                Cell cell;
+                switch (excleColumn.javaType()) {
+                    case NONE:
+                        cell = row.createCell(index);
+                        cell.setCellStyle(cellStyle);
+                        break;
+                    case LIST:
+                        String name = field.getName();
+                        List<String> list = (ArrayList<String>) MyBeanUtils.getProperty(t, name);
+                        for (int i = 0; i < list.size(); ++i) {
+                            cell = row.createCell(index++);
+                            cell.setCellStyle(cellStyle);
+                            cell.setCellValue(list.get(i));
+                        }
+                        break;
+                    case IDENTITY:
+                            cell = row.createCell(index);
+                            cell.setCellStyle(cellStyle);
+                            cell.setCellValue(idCounter++);
+                        break;
+                        default:
+                            cell = row.createCell(index);
+                            cell.setCellStyle(cellStyle);
+                            String fieldName = field.getName();
+                            Object o = MyBeanUtils.getProperty(t, fieldName);
+                            if (null== o) break;
+                            String value;
+                            if (excleColumn.javaType().equals(ExcelColumType.DATE)) {
+                                DateFormat dateFormat = indexWithDateFormat.get(index);
+                                value = dateFormat.format((Date) o);
+                            }else {
+                                value = o.toString();
+                            }
+                            cell.setCellValue(value);
+                        break;
+                }
+
+            }
+        }
+        wb.write(new FileOutputStream("/Users/xiaozhi/Desktop/"+excleSheet.exportFileName() + excleSheet.exName()));
+    }
+
+
     public static void checkExcleFile(File file) {
         if (null == file) {
             throw new NullFileException();
@@ -115,4 +200,5 @@ public class ExcelUtils {
             throw new NotExcelException();
         }
     }
+
 }

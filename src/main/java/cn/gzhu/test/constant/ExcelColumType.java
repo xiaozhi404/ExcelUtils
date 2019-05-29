@@ -6,5 +6,6 @@ package cn.gzhu.test.constant;
  */
 public enum ExcelColumType {
     //DATE为1999-01-12的格式
-    STRING, INTEGER, DOUBLE, LONG, DATE
+    //HEAD 动态生成标题头
+    STRING, INTEGER, DOUBLE, LONG, DATE, LIST, NONE, IDENTITY, HEAD, MERGEHEAD
 }
